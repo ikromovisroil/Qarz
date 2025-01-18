@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Qarz</title>
+{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Istemolchilar</a></li>
+          <li class="breadcrumb-item active">Qarzlar</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title">Qarzlar</h5>
+                <div class="mt-3 ">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                    Qarz qo'shish
+                  </button>
+                  <div class="modal fade" id="verticalycentered" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <form method="POST" class="modal-content">{% csrf_token %}
+                        <div class="modal-header">
+                          <h5 class="modal-title">Qarz qo'shish</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                              <label for="id_summa" class="col-sm-3 col-form-label">Summa</label>
+                              <div class="col-sm-9">
+                                <input type="number" name="summa" class="form-control" min="1" required="" id="id_summa">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Saqlash</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Table with stripped rows -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Sana</th>
+                    <th scope="col">Summa</th>
+                    <th scope="col">Harakat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for i in qarz %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ i.date}}</td>
+                    <td>{{ i.summa }}</td>
+                    <td>
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentereds{{i.id}}">
+                            <i class="ri-ball-pen-line"></i>
+                          </button>
+                          <div class="modal fade" id="verticalycentereds{{i.id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <form method="POST" action="{% url 'debt_edit' i.pk %}" class="modal-content">{% csrf_token %}
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Qarzni taxrirlash</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+                                      <label for="summa" class="col-sm-3 col-form-label">Summa</label>
+                                      <div class="col-sm-9">
+                                        <input type="number" name="summa" maxlength="100" value="{{i.summa}}" class="form-control" required="" id="summa">
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Saqlash</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#verticalycenterede{{i.id}}">
+                            <i class="ri-delete-bin-6-line"></i>
+                          </button>
+                          <div class="modal fade" id="verticalycenterede{{i.id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Qarzni o'chirish</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    O'chirishni tasdiqlang
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="ri-close-fill"></i></button>
+                                  <a href="{% url 'debt_delete' i.pk %}" class="btn btn-primary"><i class="ri-check-line"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock content %}

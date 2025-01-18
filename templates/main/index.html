@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Istemolchilar</title>
+{% endblock title %}
+
+{% block css %}
+<link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active">Istemolchilar</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title">Istemolchilar</h5>
+                <div class="mt-3 ">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                    Istemolchi qo'shish
+                  </button>
+                  <div class="modal fade" id="verticalycentered" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <form method="POST" class="modal-content">{% csrf_token %}
+                        <div class="modal-header">
+                          <h5 class="modal-title">Istemolchi qo'shish</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                              <label for="id_full_name" class="col-sm-3 col-form-label">To'liq ism</label>
+                              <div class="col-sm-9">
+                                <input type="text" name="full_name" maxlength="100" class="form-control" required="" id="id_full_name">
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label for="id_tel" class="col-sm-3 col-form-label">Telefon</label>
+                              <div class="col-sm-9">
+                                <input type="text" name="tel" maxlength="20" class="form-control" required="" id="id_tel">
+                              </div>
+                            </div>
+                            <div class="row mb-3">
+                              <label for="id_pazivnoy" class="col-sm-3 col-form-label">Pazivnoy</label>
+                              <div class="col-sm-9">
+                                <input type="text" name="pazivnoy" maxlength="10" class="form-control" required="" id="id_pazivnoy">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Saqlash</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">To'liq ism</th>
+                    <th scope="col">Telefon</th>
+                    <th scope="col">Pazinoy</th>
+                    <th scope="col">Summa</th>
+                    <th scope="col">Harakat</th>
+                  </tr>
+                </thead>
+                <tbody id="employee_list">
+                 {% for i in employee %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ i.full_name }}</td>
+                    <td>{{ i.tel }}</td>
+                    <td>{{ i.pazivnoy }}</td>
+                    <td><a href="{% url 'debt' i.pk %}">{{ i.summa }}</a></td>
+                    <td>
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentereds{{i.id}}">
+                            <i class="ri-ball-pen-line"></i>
+                          </button>
+                          <div class="modal fade" id="verticalycentereds{{i.id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <form method="POST" action="{% url 'employee_edit' i.pk %}" class="modal-content">{% csrf_token %}
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Istemolchini taxrirlash</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+                                      <label for="full_name" class="col-sm-3 col-form-label">To'liq ism</label>
+                                      <div class="col-sm-9">
+                                        <input type="text" name="full_name" maxlength="100" value="{{i.full_name}}" class="form-control" required="" id="full_name">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="tel" class="col-sm-3 col-form-label">Telefon</label>
+                                      <div class="col-sm-9">
+                                        <input type="text" name="tel" maxlength="20" value="{{i.tel}}" class="form-control" required="" id="tel">
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <label for="pazivnoy" class="col-sm-3 col-form-label">Pazivnoy</label>
+                                      <div class="col-sm-9">
+                                        <input type="text" name="pazivnoy" maxlength="10" value="{{i.pazivnoy}}" class="form-control" required="" id="pazivnoy">
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Saqlash</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
+                          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#verticalycenterede{{i.id}}">
+                            <i class="ri-delete-bin-6-line"></i>
+                          </button>
+                          <div class="modal fade" id="verticalycenterede{{i.id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">O'chirish</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    O'chirishni tasdiqlang
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="ri-close-fill"></i></button>
+                                  <a href="{% url 'employee_delete' i.pk %}" class="btn btn-primary"><i class="ri-check-line"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </td>
+                  </tr>
+                 {% endfor %}
+                  <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>{{jami_sum}}</td>
+                      <td></td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock content %}
+
+{% block js %}
+ <script src="{% static 'assets/js/main.js' %}"></script>
+
+{% endblock js %}
