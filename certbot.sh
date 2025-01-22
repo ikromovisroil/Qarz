@@ -1,0 +1,1 @@
+certbot --nginx -d delay.uz -d www.delay.uz
